@@ -1,0 +1,43 @@
+获取需要出款的任务：
+  接口： 你们定
+  参数： 无
+  返回结果：
+          { 
+            code=0,
+            msg='',
+            result={...}
+          }
+          result里的元素的结构：
+            taskId 任务id,int
+            toAddr 转到的钱包地址，string
+            remark 备注描述,string
+            amount 金额，double
+            walletType 钱包类型，eth,trx，等等，string
+
+推送出款结果：
+  接口：你们定
+  参数：
+      taskId 任务id,int
+      toAddr 转到的钱包地址，string
+      remark 备注描述,string
+      amount 金额，double
+      walletType 钱包类型，eth,trx，等等，string
+      transactionId 链上交易id，string
+      success 是否成功,bool
+      reason 失败原因,string
+
+  返回结果：
+      {
+        code = 0,
+        msg = ''
+      }
+
+
+获取地址是否已加白:
+  接口：你们定
+  返回结果：
+      {
+        code = 0,
+        ok=1, 1真0假
+        msg = ''
+      }

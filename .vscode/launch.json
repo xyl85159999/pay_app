@@ -1,0 +1,45 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "voss_tran_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "voss_tran_app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "voss_tran_app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "flutter_tron_api",
+            "cwd": "plugin/flutter_tron_api",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_tron_api (profile mode)",
+            "cwd": "plugin/flutter_tron_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_tron_api (release mode)",
+            "cwd": "plugin/flutter_tron_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
