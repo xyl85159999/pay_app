@@ -40,7 +40,7 @@ class PayOutMgr extends OnUpdateActor {
   Future<PayOutTask?> getPayOutTaskFromLocal() async {
     await dbMgr.open();
     final sql =
-        "select * from $tbName where status < ${PayOutStatus.payOutStatusCallbackOk.index} ORDER BY status DESC LIMIT 1;";
+        "select * from $tbName where status < ${PayOutStatusEnum.payOutStatusSucceed.index} ORDER BY status DESC LIMIT 1;";
     List<Map<String, dynamic>> list = await dbMgr.queryList(sql);
     mypdebug('getPayOutTaskFromLocal $list');
     await dbMgr.close();
@@ -109,9 +109,9 @@ class PayOutMgr extends OnUpdateActor {
     if (result[0] is String) {
       task.fromAddr = bcMgr.addr;
       task.transactionId = result[0];
-      task.status = PayOutStatus.payOutStatusProcessing;
+      task.status = PayOutStatusEnum.payOutStatusProcessing;
     } else {
-      task.status = PayOutStatus.payOutStatusFail;
+      task.status = PayOutStatusEnum.payOutStatusFail;
       task.remark = result.last;
     }
   }
@@ -136,19 +136,19 @@ class PayOutMgr extends OnUpdateActor {
     }
 
     switch (task.status) {
-      case PayOutStatus.payOutStatusNone:
+      case PayOutStatusEnum.payOutStatusNone:
         await tranUsdt(bcMgr, task);
         break;
-      case PayOutStatus.payOutStatusProcessing:
+      case PayOutStatusEnum.payOutStatusProcessing:
         await checkTran(bcMgr, task);
         break;
-      case PayOutStatus.payOutStatusSucceed:
+      case PayOutStatusEnum.payOutStatusCallback:
         // TODO: Handle this case.
         break;
-      case PayOutStatus.payOutStatusCallbackOk:
+      case PayOutStatusEnum.payOutStatusSucceed:
         // TODO: Handle this case.
         break;
-      case PayOutStatus.payOutStatusFail:
+      case PayOutStatusEnum.payOutStatusFail:
         // TODO: Handle this case.
         break;
     }
@@ -170,8 +170,8 @@ class PayOutMgr extends OnUpdateActor {
           toAddr: randomStr(25),
           transactionId: randomStr(25),
           walletType: i % 2 == 0 ? 'trx' : 'eth',
-          status: PayOutStatus
-              .values[random.nextInt(PayOutStatus.values.length) - 1],
+          status: PayOutStatusEnum
+              .values[random.nextInt(PayOutStatusEnum.values.length) - 1],
           remark: randomStr(10),
           updateTime: _dataTm + random.nextInt(86400),
           createTime: _dataTm + random.nextInt(86400));

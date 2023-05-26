@@ -5,7 +5,7 @@ class PayOutTask {
   late int taskId;
 
   ///状态
-  late PayOutStatus status;
+  late PayOutStatusEnum status;
 
   ///钱包类型
   late String walletType;
@@ -38,14 +38,14 @@ class PayOutTask {
       this.toAddr = '',
       this.amount = 0,
       this.transactionId = '',
-      this.status = PayOutStatus.payOutStatusNone,
+      this.status = PayOutStatusEnum.payOutStatusNone,
       this.remark = '',
       this.updateTime = 0,
       this.createTime = 0});
 
   PayOutTask.fromJson(Map<String, dynamic> json) {
     assert(json["status"] is int);
-    status = PayOutStatus.values[json["status"]];
+    status = PayOutStatusEnum.values[json["status"]];
 
     if (json["task_id"] is int) {
       taskId = json["task_id"];
