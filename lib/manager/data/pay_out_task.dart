@@ -33,6 +33,7 @@ class PayOutTask {
 
   PayOutTask(
       {this.taskId = 0,
+      walletType = '',
       this.fromAddr = '',
       this.toAddr = '',
       this.amount = 0,

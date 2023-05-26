@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/manager/data/pay_out_task.dart';
 import 'package:bobi_pay_out/manager/timer_mgr.dart';
@@ -157,21 +159,45 @@ class PayOutMgr extends OnUpdateActor {
   ///当前查询用的时间戳
   int get dataTm => _dataTm;
 
+  List<PayOutTask> _randomData(int count) {
+    List<PayOutTask> result = [];
+    var random = Random(DateTime.now().millisecondsSinceEpoch);
+    for (int i = 0; i < count; i++) {
+      PayOutTask task = PayOutTask(
+          amount: random.nextInt(999999999).toDouble(),
+          taskId: random.nextInt(100),
+          fromAddr: randomStr(25),
+          toAddr: randomStr(25),
+          transactionId: randomStr(25),
+          walletType: i % 2 == 0 ? 'trx' : 'eth',
+          status: PayOutStatus
+              .values[random.nextInt(PayOutStatus.values.length) - 1],
+          remark: randomStr(10),
+          updateTime: _dataTm + random.nextInt(86400),
+          createTime: _dataTm + random.nextInt(86400));
+      result.add(task);
+    }
+    result.sort((PayOutTask a, PayOutTask b) {
+      return a.taskId.compareTo(b.taskId);
+    });
+    return result;
+  }
+
   ///获取今日数据
   Future<List<PayOutTask>> getTodayData() async {
     _dataTm = getTime(DateTime.now());
-    return [];
+    return _randomData(10);
   }
 
   ///获取上一日数据
   Future<List<PayOutTask>> getPreviousDayData() async {
     _dataTm = _dataTm - 86400;
-    return [];
+    return _randomData(20);
   }
 
   ///获取下一日数据
   Future<List<PayOutTask>> getNextDayData() async {
     _dataTm = _dataTm + 86400;
-    return [];
+    return _randomData(20);
   }
 }

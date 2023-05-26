@@ -35,6 +35,13 @@ int randomInt({int? min, int? max}) {
   return min + gRandom.nextInt(max - min);
 }
 
+const _chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+Random _rnd = Random(nowUnixTime());
+String randomStr(int len) {
+  return String.fromCharCodes(Iterable.generate(
+      len, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+}
+
 copyStr(String str) {
   if (str.isEmpty) return;
   Clipboard.setData(ClipboardData(text: str));
