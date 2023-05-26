@@ -1,13 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tron_api/eth_global.dart';
-import 'package:flutter_tron_api/tron_global.dart';
-import 'package:otp/otp.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
-import 'package:provider/provider.dart';
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/model/sql/dbUtil.dart';
 import 'package:bobi_pay_out/service/service_voss_local.dart';
@@ -15,7 +7,12 @@ import 'package:bobi_pay_out/service/service_voss_tj.dart';
 import 'package:bobi_pay_out/utils/debug_info.dart';
 import 'package:bobi_pay_out/utils/event_bus.dart';
 import 'package:bobi_pay_out/utils/string.dart';
-import 'package:bobi_pay_out/utils/utility.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_tron_api/eth_global.dart';
+import 'package:flutter_tron_api/tron_global.dart';
+import 'package:provider/provider.dart';
 
 import 'app/app_scene.dart';
 
