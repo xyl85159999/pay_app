@@ -100,8 +100,8 @@ String hideString(String str) {
   return "${str.substring(0, 6)}*******${str.substring(str.length - 6, str.length)}";
 }
 
-int? getTime(DateTime? dt, {bool isEnd = false}) {
-  if (dt == null) return null;
+int getTime(DateTime? dt, {bool isEnd = false}) {
+  dt ??= DateTime.now();
   if (isEnd) {
     var d = DateTime(dt.year, dt.month, dt.day, 23, 59, 59);
     return d.millisecondsSinceEpoch ~/ 1000;

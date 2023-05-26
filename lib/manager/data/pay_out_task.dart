@@ -1,15 +1,34 @@
 import 'package:bobi_pay_out/model/constant.dart';
 
 class PayOutTask {
+  ///任务id
   late int taskId;
-  late String fromAddr;
-  late String toAddr;
-  late double amount;
-  late String walletType;
-  late String transactionId;
+
+  ///状态
   late PayOutStatus status;
+
+  ///钱包类型
+  late String walletType;
+
+  ///出款地址
+  late String fromAddr;
+
+  ///首款地址
+  late String toAddr;
+
+  ///金额
+  late double amount;
+
+  ///交易id
+  late String transactionId;
+
+  ///备注
   late String remark;
+
+  ///更新时间
   late int updateTime;
+
+  ///创建时间
   late int createTime;
 
   PayOutTask(

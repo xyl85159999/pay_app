@@ -151,4 +151,27 @@ class PayOutMgr extends OnUpdateActor {
         break;
     }
   }
+
+  int _dataTm = 0;
+
+  ///当前查询用的时间戳
+  int get dataTm => _dataTm;
+
+  ///获取今日数据
+  Future<List<PayOutTask>> getTodayData() async {
+    _dataTm = getTime(DateTime.now());
+    return [];
+  }
+
+  ///获取上一日数据
+  Future<List<PayOutTask>> getPreviousDayData() async {
+    _dataTm = _dataTm - 86400;
+    return [];
+  }
+
+  ///获取下一日数据
+  Future<List<PayOutTask>> getNextDayData() async {
+    _dataTm = _dataTm + 86400;
+    return [];
+  }
 }
