@@ -1,6 +1,4 @@
-import 'package:bobi_pay_out/manager/transcation_mgr.dart';
 import 'package:bobi_pay_out/provider/view_state_refresh_list_model.dart';
-import 'package:bobi_pay_out/utils/utility.dart';
 
 class TranscationModel extends ViewStateRefreshListModel {
   bool _canClean = false;
@@ -36,8 +34,9 @@ class TranscationModel extends ViewStateRefreshListModel {
       currentPageNum = 1;
       pageNum = 1;
     }
-    return await transactionMgr.get_transaction_log_list(pageNum ?? 1, 20,
-        begin_time: getTime(startDate),
-        end_time: getTime(endDate, isEnd: true));
+    return [];
+    // return await transactionMgr.get_transaction_log_list(pageNum ?? 1, 20,
+    //     begin_time: getTime(startDate),
+    //     end_time: getTime(endDate, isEnd: true));
   }
 }

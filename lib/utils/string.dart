@@ -12,6 +12,4 @@ class EventEnums {
   static const String connectivityChanged = 'connectivityChanged';
   //初始化
   static const String appInitData = 'appInitData';
-  // 
-  static const String showGoogleDialog = 'showGoogleDialog';
 }

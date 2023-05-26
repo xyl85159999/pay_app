@@ -30,7 +30,6 @@ class Routes {
     });
 
     router.define(rootScene, handler: rootSceneHandler);
-    router.define(tongjiDetail, handler: tongjiDetailHandler);
 
     _confgOpenTransition();
   }

@@ -8,7 +8,6 @@ import 'package:flutter_tron_api/tron_global.dart';
 import 'package:otp/otp.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
-import 'package:bobi_pay_out/manager/addr_mgr.dart';
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/model/sql/dbUtil.dart';
 import 'package:bobi_pay_out/service/service_voss_local.dart';
@@ -34,7 +33,6 @@ void main() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await mainInit();
       await mainUpdateConf();
-      eventBus.emit(EventEnums.showGoogleDialog);
       eventBus.emit(EventEnums.appInitData);
     });
 
@@ -58,7 +56,6 @@ Future mainInit() async {
   // await chukuanMgr.initData(list);
   // 初始化配置数据
   await confMgr.init();
-  await addrMgr.init();
 }
 
 Future mainUpdateConf() async {
@@ -147,8 +144,6 @@ Future mainUpdateConf() async {
   } else {
     confMgr.google_key = '';
   }
-
-  await addrMgr.updateConf();
 }
 
 Future<bool?> showCustomDialog(BuildContext context,
@@ -225,103 +220,6 @@ Future<bool?> showCustomDialog2(BuildContext context,
             },
           ),
         ],
-      );
-    },
-  );
-}
-
-Future<bool?> showGoogleDialog(BuildContext context, bool mounted,
-    {FutureOr<void> Function(bool result)? onResult}) async {
-  final secret = confMgr.google_key.isEmpty ? OTP.randomSecret() : '';
-  String code = '';
-  return showDialog<bool>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(secret.isEmpty ? '验证谷歌码' : '扫码绑定谷歌KEY'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              secret.isEmpty
-                  ? const SizedBox.shrink()
-                  : InkWell(
-                      child: Center(
-                        child: PrettyQr(
-                          typeNumber: null,
-                          size: 100.w,
-                          data: 'otpauth://totp/voss?secret=$secret',
-                          errorCorrectLevel: QrErrorCorrectLevel.M,
-                          roundEdges: true,
-                        ),
-                      ),
-                      onTap: () {
-                        copyStr(secret);
-                        showToastTip("复制成功:$secret");
-                      },
-                    ),
-              TextFormField(
-                maxLength: 6,
-                // autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: '输入您的谷歌码',
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, //数字，只能是整数
-                ],
-                onChanged: (value) {
-                  code = value;
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      if (onResult != null) {
-                        onResult(false);
-                      }
-                    },
-                    child: const Text('取消'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (code == null || code.isEmpty) {
-                        return showToastTip("请输入谷歌码");
-                      }
-                      if (secret.isEmpty) {
-                        bool pass = await confMgr.googleCodeVerification(code);
-                        showToastTip(pass ? '验证成功' : '谷歌码错误🙅');
-                        onResult!(pass);
-                      } else {
-                        bool pass = await confMgr.googleCodeVerification(code,
-                            secret: secret);
-                        if (!pass) {
-                          //  onResult!(false);
-                          return showToastTip('谷歌码错误🙅');
-                        }
-                        bool b = await confMgr.updateGoogleKey(secret);
-                        // onResult!(b);
-                        if (b) {
-                          showToastTip("谷歌码绑定成功");
-                        } else {
-                          showToastTip("谷歌码绑定失败");
-                        }
-                      }
-                      if (mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: const Text('确定'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       );
     },
   );

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:provider/provider.dart';
 import 'package:bobi_pay_out/main.dart';
-import 'package:bobi_pay_out/manager/addr_mgr.dart';
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/model/sql/tablesInit.dart';
@@ -167,32 +166,23 @@ class _WoDePageState extends State<WoDePage> {
                       ),
                       Expanded(
                         child: ElevatedButton(
-                          child: Text(isEdit ? '修改' : '添加'),
-                          onPressed: () async {
-                            if (isEdit) {
-                              await confMgr.edit(ConfData(
-                                  id: confData!.id,
-                                  config_desc: _desController.text,
-                                  config_key: _keyController.text,
-                                  config_value: _valueController.text));
-                              Routes.popPage(context);
-                            } else {
-                              showGoogleDialog(
-                                context,
-                                mounted,
-                                onResult: (result) async {
-                                  if (result) {
-                                    await confMgr.add(ConfData(
-                                        config_desc: _desController.text,
-                                        config_key: _keyController.text,
-                                        config_value: _valueController.text));
-                                    Routes.popPage(context);
-                                  }
-                                },
-                              );
-                            }
-                          },
-                        ),
+                            child: Text(isEdit ? '修改' : '添加'),
+                            onPressed: () async {
+                              if (isEdit) {
+                                await confMgr.edit(ConfData(
+                                    id: confData!.id,
+                                    config_desc: _desController.text,
+                                    config_key: _keyController.text,
+                                    config_value: _valueController.text));
+                                Routes.popPage(context);
+                              } else {
+                                await confMgr.add(ConfData(
+                                    config_desc: _desController.text,
+                                    config_key: _keyController.text,
+                                    config_value: _valueController.text));
+                                Routes.popPage(context);
+                              }
+                            }),
                       ),
                     ],
                   )
@@ -244,41 +234,20 @@ class _WoDePageState extends State<WoDePage> {
                                   await handler(false);
                                   return;
                                 }
-                                showGoogleDialog(
-                                  context,
-                                  mounted,
-                                  onResult: (b) async {
-                                    if (b) {
-                                      bool result = await confMgr
-                                          .delete(value.list[index]);
-                                      if (result) {
-                                        showToastTip('删除成功');
-                                      }
-                                      await handler(result);
-                                    } else {
-                                      await handler(false);
-                                    }
-                                  },
-                                );
+                                bool result =
+                                    await confMgr.delete(value.list[index]);
+                                if (result) {
+                                  showToastTip('删除成功');
+                                }
+                                await handler(result);
                               },
                               color: Colors.red,
                             ),
                             SwipeAction(
                                 title: "编辑",
                                 onTap: (CompletionHandler handler) async {
-                                  /// false means that you just do nothing,it will close
-                                  /// action buttons by default
-                                  showGoogleDialog(
-                                    context,
-                                    mounted,
-                                    onResult: (result) async {
-                                      await handler(false);
-                                      if (result) {
-                                        await showInformationDialog(context,
-                                            confData: value.list[index]);
-                                      }
-                                    },
-                                  );
+                                  await showInformationDialog(context,
+                                      confData: value.list[index]);
                                 },
                                 color: Colors.blue),
                           ],
@@ -344,36 +313,17 @@ class _WoDePageState extends State<WoDePage> {
                                 content: '您确定要重置所有配置吗？(会清理本地库)',
                                 ok: '重置', onResult: (result) async {
                               if (!result) return;
-                              showGoogleDialog(context, mounted,
-                                  onResult: (result) async {
-                                if (!result) return;
-                                await sqlTables.dropAllTable();
-                                await mainInit();
-                                await mainUpdateConf();
-                                showToastTip('重置所有配置完成');
-                              });
+
+                              await sqlTables.dropAllTable();
+                              await mainInit();
+                              await mainUpdateConf();
+                              showToastTip('重置所有配置完成');
                             });
                           },
                           child: const Text("重置所有配置")),
                       SizedBox(
                         width: 10.w,
                       ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            await showCustomDialog(context,
-                                content: '您确定要同步私钥到本地吗？',
-                                ok: '同步', onResult: (result) async {
-                              if (!result) return;
-                              showGoogleDialog(context, mounted,
-                                  onResult: (result) async {
-                                if (!result) return;
-                                final list =
-                                    await serviceVossLocal.getLocalList();
-                                await addrMgr.initData(list);
-                              });
-                            });
-                          },
-                          child: const Text("同步私钥到本地")),
                     ],
                   ),
                   Row(
@@ -386,16 +336,12 @@ class _WoDePageState extends State<WoDePage> {
                                 content: '导入配置',
                                 ok: '导入', onResult: (result, {str}) async {
                               if (!result) return;
-                              showGoogleDialog(context, mounted,
-                                  onResult: (result) async {
-                                if (!result) return;
-                                final a = await confMgr.importConf(str!);
-                                if (a) {
-                                  showToastTip('导入配置完成');
-                                } else {
-                                  showToastTip('导入配置失败,请检查json内容');
-                                }
-                              });
+                              final a = await confMgr.importConf(str!);
+                              if (a) {
+                                showToastTip('导入配置完成');
+                              } else {
+                                showToastTip('导入配置失败,请检查json内容');
+                              }
                             });
                           },
                           child: const Text("导入配置")),
@@ -408,16 +354,12 @@ class _WoDePageState extends State<WoDePage> {
                                 content: '导出配置',
                                 ok: '导出', onResult: (result) async {
                               if (!result) return;
-                              showGoogleDialog(context, mounted,
-                                  onResult: (result) async {
-                                if (!result) return;
-                                final a = await confMgr.outportConf();
-                                if (a) {
-                                  showToastTip('导出配置完成');
-                                } else {
-                                  showToastTip('导出配置失败');
-                                }
-                              });
+                              final a = await confMgr.outportConf();
+                              if (a) {
+                                showToastTip('导出配置完成');
+                              } else {
+                                showToastTip('导出配置失败');
+                              }
                             });
                           },
                           child: const Text("导出配置")),

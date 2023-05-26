@@ -5,10 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:bobi_pay_out/main.dart';
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/model/constant.dart';
-import 'package:bobi_pay_out/pages/chukuan.dart';
-import 'package:bobi_pay_out/pages/guiji.dart';
 import 'package:bobi_pay_out/pages/transcation.dart';
-import 'package:bobi_pay_out/pages/tongji.dart';
 import 'package:bobi_pay_out/pages/wode.dart';
 import 'package:bobi_pay_out/utils/event_bus.dart';
 import 'package:bobi_pay_out/utils/string.dart';
@@ -65,13 +62,6 @@ class RootSceneState extends State<RootScene> with TickerProviderStateMixin {
     eventBus.on(EventEnums.resumed, _onResumed);
     //主场景model
     _rootSceneModel = Provider.of<RootSceneModel>(context, listen: false);
-    eventBus.on(EventEnums.showGoogleDialog, (arg) {
-      if (confMgr.google_key.isEmpty) {
-        Future.delayed(Duration.zero, () {
-          showGoogleDialog(context, mounted);
-        });
-      }
-    });
   }
 
   //后台切换回来 默认检测一次版本更新
@@ -83,9 +73,6 @@ class RootSceneState extends State<RootScene> with TickerProviderStateMixin {
     RootScene.pages = [];
 
     RootScene.pages.add(const TranscationPage());
-    RootScene.pages.add(const ChuKuanPage());
-    RootScene.pages.add(const GuiJiPage());
-    RootScene.pages.add(const TongJiPage());
     RootScene.pages.add(const WoDePage());
 
     Future.delayed(const Duration(milliseconds: 200), () {
