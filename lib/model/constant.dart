@@ -25,13 +25,13 @@ const COLLECTION_STATUS_WAITING_CONFIRM = 7; //等待确认
 const COLLECTION_STATUS_HEIGHT_ENERGY = 8; //高费用
 
 const COLLECTION_LIST = {
-  "$COLLECTION_STATUS_NONE" : "转账初始化",
-  "$COLLECTION_STATUS_COST" : "转入费用中",
-  "$COLLECTION_STATUS_ING" : "转账中",
-  "$COLLECTION_STATUS_OK" : "转账完成",
-  "$COLLECTION_STATUS_PASS" : "不转账",
-  "$COLLECTION_STATUS_FAIL" : "转账失败",
-  "$COLLECTION_STATUS_WAITING_SIGIN" : "等待远程签名",
+  "$COLLECTION_STATUS_NONE": "转账初始化",
+  "$COLLECTION_STATUS_COST": "转入费用中",
+  "$COLLECTION_STATUS_ING": "转账中",
+  "$COLLECTION_STATUS_OK": "转账完成",
+  "$COLLECTION_STATUS_PASS": "不转账",
+  "$COLLECTION_STATUS_FAIL": "转账失败",
+  "$COLLECTION_STATUS_WAITING_SIGIN": "等待远程签名",
 };
 
 const TRANSFER_TASK_STATUS_NONE = 0; // 初始化
@@ -44,12 +44,20 @@ const TRANSFER_TASK_STATUS_REJECT = 13; // 拒绝出款
 const TRANSFER_TASK_STATUS_INVALID = 14; // 作废
 
 const TRANSFER_TASK_LIST = {
-  "$TRANSFER_TASK_STATUS_NONE" : "初始化",
-  "$TRANSFER_TASK_STATUS_ACCEPT" : "确认开始出款",
-  "$TRANSFER_TASK_STATUS_ING" : "出款中",
-  "$TRANSFER_TASK_STATUS_OK" : "出款完成",
-  "$TRANSFER_TASK_STATUS_FAIL" : "出款出错",
-  "$TRANSFER_TASK_STATUS_NOT_USDT" : "余额不足",
-  "$TRANSFER_TASK_STATUS_REJECT" : "拒绝出款",
-  "$TRANSFER_TASK_STATUS_INVALID" : "作废",
+  "$TRANSFER_TASK_STATUS_NONE": "初始化",
+  "$TRANSFER_TASK_STATUS_ACCEPT": "确认开始出款",
+  "$TRANSFER_TASK_STATUS_ING": "出款中",
+  "$TRANSFER_TASK_STATUS_OK": "出款完成",
+  "$TRANSFER_TASK_STATUS_FAIL": "出款出错",
+  "$TRANSFER_TASK_STATUS_NOT_USDT": "余额不足",
+  "$TRANSFER_TASK_STATUS_REJECT": "拒绝出款",
+  "$TRANSFER_TASK_STATUS_INVALID": "作废",
 };
+
+enum PayOutStatus {
+  payOutStatusNone,
+  payOutStatusProcessing,
+  payOutStatusSucceed,
+  payOutStatusCallbackOk,
+  payOutStatusFail,
+}

@@ -29,7 +29,7 @@ class CreateTableSqls {
       status INT NOT NULL UNIQUE,
       remark VARCHAR(255) NULL,
       update_time INT NOT NULL,
-      create_time INT NOT NULL,
+      create_time INT NOT NULL
     );
   ''';
   //商户地址表

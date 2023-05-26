@@ -104,7 +104,7 @@ class TransactionMgr extends OnUpdateActor {
       }
       mypdebug("33-transactionUsdtTron-4");
       tronMgr.setConfig(task.fromAddr!, '');
-      double? usdtBalance = await tronMgr.getTrc20Balance();
+      double? usdtBalance = await tronMgr.getUsdtBalance();
       if (usdtBalance == -1) {
         mypdebug("33-transactionUsdtTron-5");
         return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败', showMsg: true);
@@ -138,7 +138,7 @@ class TransactionMgr extends OnUpdateActor {
             showMsg: true);
       }
 
-      double? trxBalance = await tronMgr.getTrxBalance();
+      double? trxBalance = await tronMgr.getBasicCurBalance();
       if (trxBalance == null) {
         mypdebug("33-transactionUsdtTron-9");
         return _TransMsg(false, task..remark = 'get trx trxBalance null',
@@ -163,7 +163,7 @@ class TransactionMgr extends OnUpdateActor {
         tronMgr.setConfig(
             tronGlobal.trx_cost_addr, tronGlobal.trx_cost_pri_key);
         List<dynamic>? resultList =
-            await tronMgr.transferTrx(task.fromAddr!, diff.ceil());
+            await tronMgr.transferBasicCur(task.fromAddr!, diff);
         mypdebug("33-transactionUsdtTron-14");
         if (resultList == null || resultList.length < 4) {
           mypdebug("33-transactionUsdtTron-15");
@@ -260,7 +260,7 @@ class TransactionMgr extends OnUpdateActor {
       }
       mypdebug("33-transactionUsdtTron-25");
       tronMgr.setConfig(task.fromAddr!, '');
-      double? trxBalance = await tronMgr.getTrxBalance();
+      double? trxBalance = await tronMgr.getBasicCurBalance();
       if (trxBalance == null) {
         mypdebug("33-transactionUsdtTron-26");
         return _TransMsg(false, task..remark = 'get trx trxBalance null',
@@ -269,7 +269,7 @@ class TransactionMgr extends OnUpdateActor {
       mypdebug("33-transactionUsdtTron-27 trxBalance:$trxBalance");
       if (trxBalance >= task.energyUsedMax!) {
         mypdebug("33-transactionUsdtTron-28");
-        double? usdtBalance = await tronMgr.getTrc20Balance();
+        double? usdtBalance = await tronMgr.getUsdtBalance();
         if (usdtBalance == -1) {
           mypdebug("33-transactionUsdtTron-29");
           return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败',
@@ -441,7 +441,7 @@ class TransactionMgr extends OnUpdateActor {
               ..status = COLLECTION_STATUS_HEIGHT_ENERGY,
             showMsg: true);
       }
-      double? trxBalance = await tronMgr.getTrxBalance();
+      double? trxBalance = await tronMgr.getBasicCurBalance();
       if (trxBalance == null) {
         mypdebug("33-transactionUsdtTron-48");
         return _TransMsg(false, task..remark = 'get trx trxBalance null',
@@ -463,7 +463,7 @@ class TransactionMgr extends OnUpdateActor {
         tronMgr.setConfig(
             tronGlobal.trx_cost_addr, tronGlobal.trx_cost_pri_key);
         List<dynamic>? resultList =
-            await tronMgr.transferTrx(task.fromAddr!, diff.ceil());
+            await tronMgr.transferBasicCur(task.fromAddr!, diff);
         mypdebug("33-transactionUsdtTron-49");
         if (resultList == null || resultList.length < 4) {
           mypdebug("33-transactionUsdtTron-50");
@@ -597,7 +597,7 @@ class TransactionMgr extends OnUpdateActor {
       }
       mypdebug("33-transactionUsdtEth-4");
       ethMgr.setConfig(task.fromAddr!, '');
-      double? usdtBalance = await ethMgr.getErc20Balance();
+      double? usdtBalance = await ethMgr.getUsdtBalance();
       if (usdtBalance == -1) {
         mypdebug("33-transactionUsdtEth-5");
         return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败');
@@ -637,7 +637,7 @@ class TransactionMgr extends OnUpdateActor {
               ..status = COLLECTION_STATUS_HEIGHT_ENERGY,
             showMsg: true);
       }
-      double? ethBalance = await ethMgr.getEthBalance();
+      double? ethBalance = await ethMgr.getBasicCurBalance();
       if (ethBalance == null) {
         mypdebug("33-transactionUsdtEth-9");
         return _TransMsg(false, task..remark = 'get eth ethBalance null');
@@ -660,7 +660,7 @@ class TransactionMgr extends OnUpdateActor {
         mypdebug("33-transactionUsdtEth-13");
         ethMgr.setConfig(ethGlobal.eth_cost_addr, ethGlobal.eth_cost_pri_key);
         List<dynamic>? resultList =
-            await ethMgr.transferEth(task.fromAddr!, diff);
+            await ethMgr.transferBasicCur(task.fromAddr!, diff);
         mypdebug("33-transactionUsdtEth-14");
         if (resultList == null || resultList.length < 4) {
           mypdebug("33-transactionUsdtEth-15");
@@ -749,7 +749,7 @@ class TransactionMgr extends OnUpdateActor {
       }
       mypdebug("33-transactionUsdtEth-25");
       ethMgr.setConfig(task.fromAddr!, '');
-      double? ethBalance = await ethMgr.getEthBalance();
+      double? ethBalance = await ethMgr.getBasicCurBalance();
       if (ethBalance == null) {
         mypdebug("33-transactionUsdtEth-26");
         return _TransMsg(false, task..remark = 'get eth ethBalance null');
@@ -757,7 +757,7 @@ class TransactionMgr extends OnUpdateActor {
       mypdebug("33-transactionUsdtEth-27 ethBalance:$ethBalance");
       if (ethBalance >= task.energyUsedMax!) {
         mypdebug("33-transactionUsdtEth-28");
-        double? usdtBalance = await ethMgr.getErc20Balance();
+        double? usdtBalance = await ethMgr.getUsdtBalance();
         if (usdtBalance == -1) {
           mypdebug("33-transactionUsdtEth-29");
           return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败');
@@ -920,7 +920,7 @@ class TransactionMgr extends OnUpdateActor {
               ..status = COLLECTION_STATUS_HEIGHT_ENERGY,
             showMsg: true);
       }
-      double? ethBalance = await ethMgr.getEthBalance();
+      double? ethBalance = await ethMgr.getBasicCurBalance();
       if (ethBalance == null) {
         mypdebug("33-transactionUsdtEth-48");
         return _TransMsg(false, task..remark = 'get eth ethBalance null',
@@ -941,7 +941,7 @@ class TransactionMgr extends OnUpdateActor {
         }
         ethMgr.setConfig(ethGlobal.eth_cost_addr, ethGlobal.eth_cost_pri_key);
         List<dynamic>? resultList =
-            await ethMgr.transferEth(task.fromAddr!, diff);
+            await ethMgr.transferBasicCur(task.fromAddr!, diff);
         mypdebug("33-transactionUsdtEth-49");
         if (resultList == null || resultList.length < 4) {
           mypdebug("33-transactionUsdtEth-50");

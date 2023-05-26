@@ -105,7 +105,7 @@ class GuiJiMgr extends OnUpdateActor {
     }
     mypdebug("transactionUsdtTron 44-9");
     tron_mgr.setConfig(task.addr!, priList.first!);
-    double? usdtBalance = await tron_mgr.getTrc20Balance();
+    double? usdtBalance = await tron_mgr.getUsdtBalance();
     if (usdtBalance == -1) {
       mypdebug("transactionUsdtTron 44-10");
       return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败', showMsg: true);
@@ -133,7 +133,7 @@ class GuiJiMgr extends OnUpdateActor {
     }
     mypdebug("transactionUsdtTron 44-13");
 
-    double? trxBalance = await tron_mgr.getTrxBalance();
+    double? trxBalance = await tron_mgr.getBasicCurBalance();
     if (trxBalance == null) {
       mypdebug("transactionUsdtTron 44-14");
       return _TransMsg(false, task..remark = 'get trx trxBalance null');
@@ -295,7 +295,7 @@ class GuiJiMgr extends OnUpdateActor {
     }
     mypdebug("transactionUsdtEth 44-9");
     eth_mgr.setConfig(task.addr!, priList.first!);
-    double? usdtBalance = await eth_mgr.getErc20Balance();
+    double? usdtBalance = await eth_mgr.getUsdtBalance();
     if (usdtBalance == -1) {
       mypdebug("transactionUsdtEth 44-10");
       return _TransMsg(true, task..remark = '转账usdt失败,获取余额失败', showMsg: true);
@@ -323,7 +323,7 @@ class GuiJiMgr extends OnUpdateActor {
     }
     mypdebug("transactionUsdtEth 44-13");
 
-    double? ethBalance = await eth_mgr.getEthBalance();
+    double? ethBalance = await eth_mgr.getBasicCurBalance();
     if (ethBalance == null) {
       mypdebug("transactionUsdtEth 44-14");
       return _TransMsg(false, task..remark = 'get eth ethBalance null',

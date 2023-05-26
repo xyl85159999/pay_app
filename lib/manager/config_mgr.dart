@@ -116,65 +116,29 @@ class ConfMgr {
   List<String> get listKey => _listKey;
   List<String> get secretListKey => _secretListKey;
   final List confList = [
-    {'config_key': 'voss_local', 'config_desc': 'local地址', 'config_value': ''},
     {
-      'config_key': 'voss_local_salt',
-      'config_desc': 'local盐',
-      'config_value': ''
+      'config_key': 'remote_url',
+      'config_desc': '远程地址',
+      'config_value': 'http://...'
     },
     {
-      'config_key': 'voss_encry_key',
-      'config_desc': 'local密钥key',
-      'config_value': ''
+      'config_key': 'remote_salt',
+      'config_desc': '远程地址加密串',
+      'config_value': '...'
     },
-    {'config_key': 'voss_tj', 'config_desc': '统计地址', 'config_value': ''},
-    {'config_key': 'voss_tj_salt', 'config_desc': '统计盐', 'config_value': ''},
+    {'config_key': 'eth_addr', 'config_desc': 'eth出款地址', 'config_value': '...'},
     {
-      'config_key': 'trx_fee_limit',
-      'config_desc': 'trx每次转账最高费用限制',
-      'config_value': ''
-    },
-    {
-      'config_key': 'trx_price',
-      'config_desc': 'trx能量价格',
-      'config_value': '420'
-    },
-    {'config_key': 'trx_grpc', 'config_desc': 'trx grpc节点', 'config_value': ''},
-    {
-      'config_key': 'eth_gas_limit',
-      'config_desc': 'eth每次转账最高费用限制',
-      'config_value': ''
-    },
-    {'config_key': 'eth_rpc', 'config_desc': 'eth rpc节点', 'config_value': ''},
-    {
-      'config_key': 'google_key',
-      'config_desc': 'google_key',
+      'config_key': 'eth_pri_key',
+      'config_desc': 'eth出款私钥',
       'is_secret': true,
-      'config_value': ''
+      'config_value': '...'
     },
+    {'config_key': 'trx_addr', 'config_desc': 'trx出款地址', 'config_value': '...'},
     {
-      'config_key': 'trx_cost_addr',
-      'config_desc': 'trx出款费用地址',
+      'config_key': 'trx_pri_key',
+      'config_desc': 'trx出款私钥',
       'is_secret': true,
-      'config_value': ''
-    },
-    {
-      'config_key': 'trx_cost_pri_key',
-      'config_desc': 'trx费用私钥',
-      'is_secret': true,
-      'config_value': ''
-    },
-    {
-      'config_key': 'eth_cost_addr',
-      'config_desc': 'eth出款费用地址',
-      'is_secret': true,
-      'config_value': ''
-    },
-    {
-      'config_key': 'eth_cost_pri_key',
-      'config_desc': 'eth费用私钥',
-      'is_secret': true,
-      'config_value': ''
+      'config_value': '...'
     }
   ];
   final List<String> _listKey = [];

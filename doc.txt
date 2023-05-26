@@ -23,7 +23,7 @@
       amount 金额，double
       walletType 钱包类型，eth,trx，等等，string
       transactionId 链上交易id，string
-      success 是否成功,bool
+      success 是否成功,1 0
       reason 失败原因,string
 
   返回结果：

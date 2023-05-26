@@ -45,14 +45,8 @@ class RootSceneState extends State<RootScene> with TickerProviderStateMixin {
   RootSceneModel? _rootSceneModel;
 
   final _pageController = PageController();
-  final List<String> _tabStrArr = ["记录", "出款", "归集", "统计", "我的"];
-  final List _tabImages = [
-    "icon_jl",
-    "icon_ck",
-    "icon_gj",
-    "icon_tj",
-    "icon_wd"
-  ];
+  final List<String> _tabStrArr = ["记录", "我的"];
+  final List _tabImages = ["icon_jl", "icon_wd"];
 
   getTabIcon(String str) {
     return Image.asset('assets/image/nav/$str.png', width: 24, height: 24);

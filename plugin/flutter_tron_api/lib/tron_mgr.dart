@@ -3,6 +3,7 @@ library flutter_tron_api;
 import 'dart:convert';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_tron_api/apis/tron_api_transaction.dart';
+import 'package:flutter_tron_api/blockchain_mgr.dart';
 import 'package:flutter_tron_api/models/tron_transaction_history.dart';
 import 'package:flutter_tron_api/tron/services/service/tron_swap.dart';
 import 'package:flutter_tron_api/tron/services/service/tron_transaction.dart';
@@ -13,14 +14,15 @@ import 'Base58Codec.dart';
 import 'models/tron_config.dart';
 import 'models/tron_exception.dart';
 
-class TronManager {
+class TronManager extends BlockchainMgr<TronConfig> {
   TronTransaction _tronTransaction = TronTransaction();
   TronSwap _tronSwap = TronSwap();
-  TronConfig _config;
-  TronManager(this._config);
+
+  TronManager(super.config);
   TronManager setConfig(String ownerAddress, String privateKey) {
-    _config.ownerAddress = ownerAddress;
-    _config.privateKey = privateKey;
+    this.addr = ownerAddress;
+    config.ownerAddress = ownerAddress;
+    config.privateKey = privateKey;
     return this;
   }
 
@@ -50,24 +52,25 @@ class TronManager {
    * 用tron api
    *
    */
-  Future<List<dynamic>?> transferTrx(String toAddress, int amount) async {
-    if (amount > 0 && amount <= _config.maxAmount) {
+  Future<List<dynamic>?> transferBasicCur(
+      String toAddress, double amount) async {
+    if (amount > 0 && amount <= config.maxAmount) {
       return await _tronTransaction.transTrx(
-        _config.ownerAddress,
-        _config.privateKey,
+        config.ownerAddress,
+        config.privateKey,
         toAddress,
-        Int64(amount),
+        Int64(amount.toInt()),
       );
     } else {
       throw ParameterException(
-          '转账数额不少于${_config.minAmount}，不大于${_config.maxAmount}');
+          '转账数额不少于${config.minAmount}，不大于${config.maxAmount}');
     }
   }
 
   // 预估能量
   Future<double?> estimateenergy(String toAddress, double amount) async {
     return await _tronTransaction.estimateenergy(
-        _config.contractAddress, _config.ownerAddress, toAddress, amount);
+        config.contractAddress, config.ownerAddress, toAddress, amount);
   }
 
   /**
@@ -77,17 +80,17 @@ class TronManager {
    */
   Future<List<dynamic>?> transferUSDT(
       String toAddress, double amount, double? trxBalance) async {
-    if (amount > _config.minAmount && amount <= _config.maxAmount) {
+    if (amount > config.minAmount && amount <= config.maxAmount) {
       return await _tronTransaction.transTrc20(
-          _config.contractAddress,
-          _config.ownerAddress,
+          config.contractAddress,
+          config.ownerAddress,
           toAddress,
           amount,
-          _config.privateKey,
+          config.privateKey,
           trxBalance);
     } else {
       throw ParameterException(
-          '转账数额不少于${_config.minAmount}，不大于${_config.maxAmount}');
+          '转账数额不少于${config.minAmount}，不大于${config.maxAmount}');
     }
   }
 
@@ -101,14 +104,14 @@ class TronManager {
   }
 
   // 获取getTrx余额
-  Future<double?> getTrxBalance({String? ownerAddress}) async {
-    return await _tronSwap.getTrxBalance(ownerAddress ?? _config.ownerAddress);
+  Future<double?> getBasicCurBalance({String? ownerAddress}) async {
+    return await _tronSwap.getTrxBalance(ownerAddress ?? config.ownerAddress);
   }
 
   // 获取getTrc20Balance余额
-  Future<double?> getTrc20Balance({String? ownerAddress}) async {
+  Future<double?> getUsdtBalance({String? ownerAddress}) async {
     return await _tronSwap.getTrc20Balance(
-        ownerAddress ?? _config.ownerAddress, _config.contractAddress);
+        ownerAddress ?? config.ownerAddress, config.contractAddress);
   }
 
   // 通过交易id获取交易数据
