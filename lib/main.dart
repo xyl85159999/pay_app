@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bobi_pay_out/manager/config_mgr.dart';
 import 'package:bobi_pay_out/model/sql/dbUtil.dart';
-import 'package:bobi_pay_out/service/service_voss_local.dart';
-import 'package:bobi_pay_out/service/service_voss_tj.dart';
+import 'package:bobi_pay_out/service/service_remote.dart';
 import 'package:bobi_pay_out/utils/debug_info.dart';
 import 'package:bobi_pay_out/utils/event_bus.dart';
 import 'package:bobi_pay_out/utils/string.dart';
@@ -57,22 +56,13 @@ Future mainInit() async {
 
 Future mainUpdateConf() async {
   // 更新配置数据
-  String? localUrl = await confMgr.getValueByKey("voss_local");
-  String? localSalt = await confMgr.getValueByKey('voss_local_salt');
+  String? localUrl = await confMgr.getValueByKey("remote_url");
+  String? localSalt = await confMgr.getValueByKey('remote_salt');
   if (localUrl != null &&
       localSalt != null &&
       localUrl.isNotEmpty &&
       localSalt.isNotEmpty) {
-    await serviceVossLocal.setUrlToken(localUrl, localSalt);
-  }
-
-  String? tjUrl = await confMgr.getValueByKey("voss_tj");
-  String? tjSalt = await confMgr.getValueByKey('voss_tj_salt');
-  if (tjUrl != null &&
-      tjSalt != null &&
-      tjUrl.isNotEmpty &&
-      tjSalt.isNotEmpty) {
-    await serviceVossTj.setUrlToken(tjUrl, tjSalt);
+    await serviceRemote.setUrlToken(localUrl, localSalt);
   }
 
   String? trxGrpc = await confMgr.getValueByKey("trx_grpc");
