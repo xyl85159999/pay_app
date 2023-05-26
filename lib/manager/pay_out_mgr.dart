@@ -5,7 +5,7 @@ import 'package:bobi_pay_out/manager/data/pay_out_task.dart';
 import 'package:bobi_pay_out/manager/timer_mgr.dart';
 import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/model/sql/DBUtil.dart';
-import 'package:bobi_pay_out/service/service_bobi.dart';
+import 'package:bobi_pay_out/service/service_remote.dart';
 import 'package:bobi_pay_out/utils/utility.dart';
 import 'package:flutter_tron_api/blockchain_mgr.dart';
 import 'package:flutter_tron_api/eth_mgr.dart';
@@ -31,7 +31,7 @@ class PayOutMgr extends OnUpdateActor {
 
   ///从远端获取新任务
   Future<void> getPayOutTaskFromRemote() async {
-    List res = await serviceBobi.getPayOutTask();
+    List res = await serviceRemote.getPayOutTask();
     if (res.isEmpty) return;
     for (var e in res) {}
   }
@@ -49,7 +49,7 @@ class PayOutMgr extends OnUpdateActor {
     return PayOutTask.fromJson(list[0]);
   }
 
-  ///
+  ///更新任务信息
   Future<bool> updateTask(PayOutTask task) async {
     await dbMgr.open();
     task.updateTime = nowUnixTimeSecond();
@@ -114,6 +114,7 @@ class PayOutMgr extends OnUpdateActor {
       task.status = PayOutStatusEnum.payOutStatusFail;
       task.remark = result.last;
     }
+    await updateTask(task);
   }
 
   Future<void> checkTran(BlockchainMgr bcMgr, PayOutTask task) async {
@@ -143,13 +144,13 @@ class PayOutMgr extends OnUpdateActor {
         await checkTran(bcMgr, task);
         break;
       case PayOutStatusEnum.payOutStatusCallback:
-        // TODO: Handle this case.
+        if (await serviceRemote.updateCollectionTask(task)) {
+          await updateTask(task);
+        }
         break;
       case PayOutStatusEnum.payOutStatusSucceed:
-        // TODO: Handle this case.
         break;
       case PayOutStatusEnum.payOutStatusFail:
-        // TODO: Handle this case.
         break;
     }
   }

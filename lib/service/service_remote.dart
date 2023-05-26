@@ -7,10 +7,10 @@ import 'package:bobi_pay_out/model/update_block_bean.dart';
 import 'package:bobi_pay_out/service/base_service.dart';
 import 'package:bobi_pay_out/utils/code_define.dart';
 
-final ServiceBobi serviceBobi = ServiceBobi();
+final ServiceRemote serviceRemote = ServiceRemote();
 
-class ServiceBobi extends BaseService {
-  ServiceBobi() : super();
+class ServiceRemote extends BaseService {
+  ServiceRemote() : super();
 
   @override
   Future<HttpResponseBean> httpPost(String path, String info) async {
