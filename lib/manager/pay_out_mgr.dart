@@ -12,7 +12,7 @@ import 'package:flutter_tron_api/models/tron_config.dart';
 import 'package:flutter_tron_api/tron_mgr.dart';
 import 'package:oktoast/oktoast.dart';
 
-final PayOutMgr guiJiMgr = PayOutMgr();
+final PayOutMgr payOutMgr = PayOutMgr();
 
 class PayOutMgr extends OnUpdateActor {
   final tbName = 'tb_pay_out';
