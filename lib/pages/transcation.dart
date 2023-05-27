@@ -360,8 +360,8 @@ class _TranscationPageState extends State<TranscationPage> {
             Text('${task.amount}'),
             Text(task.transactionId),
             Text(task.remark),
-            Text('${task.updateTime}'),
-            Text('${task.createTime}'),
+            Text(DateTimeFormat.toLong(task.updateTime * 1000)),
+            Text(DateTimeFormat.toLong(task.createTime * 1000)),
           ],
         );
       },
