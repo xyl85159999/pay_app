@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:bobi_pay_out/manager/data/pay_out_task.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:bobi_pay_out/manager/connectivity_mgr.dart';
+import 'package:bobi_pay_out/manager/data/pay_out_task.dart';
+import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/model/update_block_bean.dart';
 import 'package:bobi_pay_out/service/base_service.dart';
 import 'package:bobi_pay_out/utils/code_define.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 final ServiceRemote serviceRemote = ServiceRemote();
 
@@ -31,7 +32,7 @@ class ServiceRemote extends BaseService {
   Future<List> getPayOutTask() async {
     Map<String, dynamic> params = {};
     final info = makeSign(params);
-    HttpResponseBean res = await httpPost('/open_api/get_local_addr', info);
+    HttpResponseBean res = await httpPost('/open_api/list_wait_pay', info);
     if (res.code == 0) {
       return res.result;
     }
@@ -39,10 +40,29 @@ class ServiceRemote extends BaseService {
   }
 
   Future<bool> updateCollectionTask(PayOutTask task) async {
-    Map<String, dynamic> params = Map.from(task.toJson());
+    Map<String, dynamic> params = {
+      "reason": task.remark,
+      "transactionId": task.transactionId,
+      "taskId": task.taskId,
+      "amount": task.amount,
+      "succes": task.status == PayOutStatusEnum.payOutStatusSucceed ||
+              task.status == PayOutStatusEnum.payOutStatusCallback
+          ? 1
+          : 0
+    };
+    // Map.from(task.toJson());
     final info = makeSign(params);
-    HttpResponseBean res =
-        await httpPost('/open_api/update_collection_task', info);
+    HttpResponseBean res = await httpPost('/open_api/fish_finish_pay', info);
+    if (res.code == 0) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> isWhiteAddress(PayOutTask task) async {
+    Map<String, dynamic> params = {"addr": task.toAddr};
+    final info = makeSign(params);
+    HttpResponseBean res = await httpPost('/open_api/is_white_address', info);
     if (res.code == 0) {
       return true;
     }
