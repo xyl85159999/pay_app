@@ -449,7 +449,7 @@ class _TranscationPageState extends State<TranscationPage> {
                 enableLoadingWhenNoData: true,
                 context: context,
                 child: SmartRefresher(
-                  controller: _transcationLogModel.refreshController,
+                  controller: refreshController,
                   enablePullDown: true,
                   enablePullUp: true,
                   onRefresh: _transcationLogModel.loadInit,
