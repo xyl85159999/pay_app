@@ -33,3 +33,22 @@ enum PayOutStatusEnum {
   ///出错
   payOutStatusFail,
 }
+
+extension PayOutStatusEnumExt on PayOutStatusEnum {
+  String get name {
+    switch (this) {
+      case PayOutStatusEnum.payOutStatusNone:
+        return "初始化";
+      case PayOutStatusEnum.payOutStatusProcessing:
+        return "转账中";
+      case PayOutStatusEnum.payOutStatusCallback:
+        return "回调中";
+      case PayOutStatusEnum.payOutStatusSucceed:
+        return "成功";
+      case PayOutStatusEnum.payOutStatusFail:
+        return "出错";
+      default:
+        return "";
+    }
+  }
+}

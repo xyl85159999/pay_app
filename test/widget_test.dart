@@ -6,9 +6,9 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 
-
-import 'package:flutter_tron_api/tron/services/service/eth_transaction.dart';
-import 'package:otp/otp.dart';
+//
+// import 'package:flutter_tron_api/tron/services/service/eth_transaction.dart';
+// import 'package:otp/otp.dart';
 
 void main() {
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -38,7 +38,7 @@ void main() {
 }
 
 Future test() async {
-  EthTransaction ethTransaction = EthTransaction();
+  // EthTransaction ethTransaction = EthTransaction();
   // await  ethTransaction.getEthBalance('0x20649766B964543CCb56b12AF2Ea3E64AD48dA3B');
   // await ethTransaction.getErc20Balance('0x20649766B964543CCb56b12AF2Ea3E64AD48dA3B', '0xdAC17F958D2ee523a2206206994597C13D831ec7');
   // await ethTransaction.transEth('d8fbbda5c01a564e1b89639125e9484138a65a03bc1199545c549871f9776951', '0x20649766B964543CCb56b12AF2Ea3E64AD48dA3B', '0xF2468879Fe68BB4c639c6aCf1cDE3211e753538C', 0.001);

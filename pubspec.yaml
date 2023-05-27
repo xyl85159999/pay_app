@@ -72,13 +72,14 @@ dependencies:
     path: ./plugin/flutter_tron_api
   otp: ^3.1.3
   pretty_qr_code: ^2.0.3
+  scalable_data_table: ^0.0.2
 
   # 状态管理 GetX
   get: ^4.6.5
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
   flutter_lints: ^2.0.0
 

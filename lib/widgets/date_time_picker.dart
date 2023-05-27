@@ -8,6 +8,8 @@ import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/utils/datetime_format.dart';
 import 'package:bobi_pay_out/utils/route/routers.dart';
 
+import '../manager/pay_out_mgr.dart';
+
 class DateTimePicker extends StatefulWidget {
   DateTime? startDate;
   DateTime? endDate;
@@ -99,6 +101,7 @@ class _DateTimePickerState extends State<DateTimePicker>
     widget.startDate = d;
     widget.endDate = d;
 
+    payOutMgr.getPreviousDayData();
     _refresh();
   }
 
@@ -119,6 +122,8 @@ class _DateTimePickerState extends State<DateTimePicker>
 
     widget.startDate = d;
     widget.endDate = d;
+
+    payOutMgr.getNextDayData();
     _refresh();
   }
 

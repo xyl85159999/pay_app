@@ -1,3 +1,4 @@
+import 'package:bobi_pay_out/manager/pay_out_mgr.dart';
 import 'package:bobi_pay_out/provider/view_state_refresh_list_model.dart';
 
 class TranscationModel extends ViewStateRefreshListModel {
@@ -34,7 +35,7 @@ class TranscationModel extends ViewStateRefreshListModel {
       currentPageNum = 1;
       pageNum = 1;
     }
-    return [];
+    return payOutMgr.getTodayData();
     // return await transactionMgr.get_transaction_log_list(pageNum ?? 1, 20,
     //     begin_time: getTime(startDate),
     //     end_time: getTime(endDate, isEnd: true));

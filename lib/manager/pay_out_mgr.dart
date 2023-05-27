@@ -14,6 +14,8 @@ import 'package:flutter_tron_api/models/tron_config.dart';
 import 'package:flutter_tron_api/tron_mgr.dart';
 import 'package:oktoast/oktoast.dart';
 
+import 'data/transcation_log_data.dart';
+
 final PayOutMgr payOutMgr = PayOutMgr();
 
 class PayOutMgr extends OnUpdateActor {
@@ -172,7 +174,7 @@ class PayOutMgr extends OnUpdateActor {
           transactionId: randomStr(25),
           walletType: i % 2 == 0 ? 'trx' : 'eth',
           status: PayOutStatusEnum
-              .values[random.nextInt(PayOutStatusEnum.values.length) - 1],
+              .values[random.nextInt(PayOutStatusEnum.values.length)],
           remark: randomStr(10),
           updateTime: _dataTm + random.nextInt(86400),
           createTime: _dataTm + random.nextInt(86400));
