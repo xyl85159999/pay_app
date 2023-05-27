@@ -1,12 +1,11 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/utils/datetime_format.dart';
 import 'package:bobi_pay_out/utils/route/routers.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../manager/pay_out_mgr.dart';
 
@@ -319,7 +318,7 @@ class _DateTimePickerState extends State<DateTimePicker>
                 ),
               ),
               // clear button
-              enableClearBtn ? clearButton() : const SizedBox.shrink(),
+              // enableClearBtn ? clearButton() : const SizedBox.shrink(),
             ]),
           ),
 

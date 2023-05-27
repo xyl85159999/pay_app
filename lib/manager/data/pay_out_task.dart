@@ -71,8 +71,8 @@ class PayOutTask {
     }
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+  Map<String, Object> toJson() {
+    final Map<String, Object> data = <String, Object>{};
     data["task_id"] = taskId;
     data["from_addr"] = fromAddr;
     data["to_addr"] = toAddr;

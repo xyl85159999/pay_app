@@ -14,8 +14,6 @@ import 'package:flutter_tron_api/models/tron_config.dart';
 import 'package:flutter_tron_api/tron_mgr.dart';
 import 'package:oktoast/oktoast.dart';
 
-import 'data/transcation_log_data.dart';
-
 final PayOutMgr payOutMgr = PayOutMgr();
 
 class PayOutMgr extends OnUpdateActor {
@@ -35,7 +33,15 @@ class PayOutMgr extends OnUpdateActor {
   Future<void> getPayOutTaskFromRemote() async {
     List res = await serviceRemote.getPayOutTask();
     if (res.isEmpty) return;
-    for (var e in res) {}
+    await dbMgr.open();
+    int tm = nowUnixTimeSecond();
+    for (var e in res) {
+      PayOutTask task = PayOutTask.fromJson(e);
+      task.createTime = tm;
+      task.updateTime = tm;
+      dbMgr.insertByHelper(tbName, task.toJson());
+    }
+    await dbMgr.close();
   }
 
   ///从本地获取未完成的任务
@@ -147,12 +153,15 @@ class PayOutMgr extends OnUpdateActor {
         break;
       case PayOutStatusEnum.payOutStatusCallback:
         if (await serviceRemote.updateCollectionTask(task)) {
+          task.status = PayOutStatusEnum.payOutStatusSucceed;
           await updateTask(task);
         }
         break;
       case PayOutStatusEnum.payOutStatusSucceed:
+        assert(false);
         break;
       case PayOutStatusEnum.payOutStatusFail:
+        assert(false);
         break;
     }
   }

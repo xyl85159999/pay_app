@@ -1,10 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:bobi_pay_out/manager/data/transcation_log_data.dart';
 import 'package:bobi_pay_out/model/constant.dart';
 import 'package:bobi_pay_out/utils/datetime_format.dart';
 import 'package:bobi_pay_out/utils/route/routers.dart';
@@ -12,10 +7,13 @@ import 'package:bobi_pay_out/utils/utility.dart';
 import 'package:bobi_pay_out/view_model/transcation_model.dart';
 import 'package:bobi_pay_out/widgets/date_time_picker.dart';
 import 'package:bobi_pay_out/widgets/sizebox_icon_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scalable_data_table/scalable_data_table.dart';
 
 import '../manager/data/pay_out_task.dart';
-import '../manager/pay_out_mgr.dart';
 
 class TranscationPage extends StatefulWidget {
   const TranscationPage({Key? key}) : super(key: key);
@@ -27,14 +25,16 @@ class TranscationPage extends StatefulWidget {
 class _TranscationPageState extends State<TranscationPage> {
   late TranscationModel _transcationLogModel;
 
-  final RefreshController refreshController = RefreshController(initialRefresh: false);
+  final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   List<PayOutTask> payoutTaskList = [];
 
   @override
   void initState() {
     super.initState();
-    _transcationLogModel = Provider.of<TranscationModel>(context, listen: false);
+    _transcationLogModel =
+        Provider.of<TranscationModel>(context, listen: false);
     _transcationLogModel.startDate = DateTime.now();
     _transcationLogModel.endDate = DateTime.now();
     _transcationLogModel.loadData();
@@ -43,7 +43,8 @@ class _TranscationPageState extends State<TranscationPage> {
   onSelectedList(BuildContext context, String str) {
     Routes.navigateTo(context, Routes.tongjiDetail, params: {
       "bao_ming": str,
-      "startDate": _transcationLogModel.startDate?.microsecondsSinceEpoch.toString(),
+      "startDate":
+          _transcationLogModel.startDate?.microsecondsSinceEpoch.toString(),
       "endDate": _transcationLogModel.endDate?.microsecondsSinceEpoch.toString()
     });
   }
@@ -314,14 +315,12 @@ class _TranscationPageState extends State<TranscationPage> {
   otherView() {
     return Consumer<TranscationModel>(
       builder: (context, value, child) {
-        return value.list.isNotEmpty
-            ? _tableView(value.list)
-            : Container();
+        return value.list.isNotEmpty ? _tableView(value.list) : Container();
       },
     );
   }
-  
-  _tableView(List<dynamic> list){
+
+  _tableView(List<dynamic> list) {
     return ScalableDataTable(
       header: DefaultTextStyle(
         style: TextStyle(
@@ -335,10 +334,10 @@ class _TranscationPageState extends State<TranscationPage> {
             Text('任务ID'),
             Text('状态'),
             Text('类型'),
-            Text('出款地址'),
-            Text('首款地址'),
             Text('金额'),
             Text('交易ID'),
+            Text('出款地址'),
+            Text('收款地址'),
             Text('备注'),
             Text('更新时间'),
             Text('创建时间'),
@@ -350,14 +349,14 @@ class _TranscationPageState extends State<TranscationPage> {
         return ScalableTableRow(
           columnWrapper: columnWrapper,
           color: MaterialStateColor.resolveWith((states) =>
-          (index % 2 == 0) ? Colors.grey[200]! : Colors.transparent),
+              (index % 2 == 0) ? Colors.grey[200]! : Colors.transparent),
           children: [
             Text('${task.taskId}'),
             Text(task.status.name),
             Text(task.walletType),
+            Text('${task.amount}'),
             Text(task.fromAddr),
             Text(task.toAddr),
-            Text('${task.amount}'),
             Text(task.transactionId),
             Text(task.remark),
             Text(DateTimeFormat.toLong(task.updateTime * 1000)),
