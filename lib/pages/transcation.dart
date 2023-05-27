@@ -12,6 +12,10 @@ import 'package:bobi_pay_out/utils/utility.dart';
 import 'package:bobi_pay_out/view_model/transcation_model.dart';
 import 'package:bobi_pay_out/widgets/date_time_picker.dart';
 import 'package:bobi_pay_out/widgets/sizebox_icon_button.dart';
+import 'package:scalable_data_table/scalable_data_table.dart';
+
+import '../manager/data/pay_out_task.dart';
+import '../manager/pay_out_mgr.dart';
 
 class TranscationPage extends StatefulWidget {
   const TranscationPage({Key? key}) : super(key: key);
@@ -23,18 +27,23 @@ class TranscationPage extends StatefulWidget {
 class _TranscationPageState extends State<TranscationPage> {
   late TranscationModel _transcationLogModel;
 
+  final RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  List<PayOutTask> payoutTaskList = [];
+
   @override
   void initState() {
-    _transcationLogModel =
-        Provider.of<TranscationModel>(context, listen: false);
     super.initState();
+    _transcationLogModel = Provider.of<TranscationModel>(context, listen: false);
+    _transcationLogModel.startDate = DateTime.now();
+    _transcationLogModel.endDate = DateTime.now();
+    _transcationLogModel.loadData();
   }
 
   onSelectedList(BuildContext context, String str) {
     Routes.navigateTo(context, Routes.tongjiDetail, params: {
       "bao_ming": str,
-      "startDate":
-          _transcationLogModel.startDate?.microsecondsSinceEpoch.toString(),
+      "startDate": _transcationLogModel.startDate?.microsecondsSinceEpoch.toString(),
       "endDate": _transcationLogModel.endDate?.microsecondsSinceEpoch.toString()
     });
   }
@@ -46,7 +55,7 @@ class _TranscationPageState extends State<TranscationPage> {
   //当前每行显示数组
   showRowCell(dd) {
     if (dd == null) return const SizedBox.shrink();
-    final data = dd as TranscationLogData;
+    final data = dd as PayOutTask;
     return Container(
       margin: EdgeInsets.only(left: 20.w, top: 10.w, right: 20.w, bottom: 10.w),
       padding: EdgeInsets.all(8.w),
@@ -81,7 +90,7 @@ class _TranscationPageState extends State<TranscationPage> {
                       ),
                       Expanded(
                           child: Text(
-                        "-${data.usdtVal ?? '-'}",
+                        "-${data.amount ?? '-'}",
                         maxLines: 3,
                         style: TextStyle(
                             fontSize: 12.w,
@@ -104,7 +113,7 @@ class _TranscationPageState extends State<TranscationPage> {
                 Text("钱包类型：", style: TextStyle(fontSize: 12.w)),
                 Expanded(
                   child: Text(
-                    (data.walletType ?? '').toString(),
+                    (data.taskId ?? '').toString(),
                     maxLines: 2,
                     style: TextStyle(
                         fontSize: 12.w,
@@ -119,7 +128,7 @@ class _TranscationPageState extends State<TranscationPage> {
                 Text("出款包名：", style: TextStyle(fontSize: 12.w)),
                 Expanded(
                   child: Text(
-                    (data.fromBagName ?? '').toString(),
+                    (data.status ?? '').toString(),
                     maxLines: 2,
                     style: TextStyle(
                         fontSize: 12.w,
@@ -143,7 +152,7 @@ class _TranscationPageState extends State<TranscationPage> {
                         color: mainColor),
                   ),
                 ),
-                (data.fromAddr == null || data.fromAddr!.isEmpty)
+                (data.fromAddr!.isEmpty)
                     ? const SizedBox.shrink()
                     : InkWell(
                         onTap: () {
@@ -226,7 +235,7 @@ class _TranscationPageState extends State<TranscationPage> {
                         color: mainColor),
                   ),
                 ),
-                (data.transactionId == null || data.transactionId!.isEmpty)
+                (data.transactionId!.isEmpty)
                     ? const SizedBox.shrink()
                     : InkWell(
                         onTap: () {
@@ -274,7 +283,7 @@ class _TranscationPageState extends State<TranscationPage> {
                 ),
               ],
             ),
-            data.remark == null || data.remark!.isEmpty
+            data.remark!.isEmpty
                 ? const SizedBox.shrink()
                 : Row(
                     children: [
@@ -303,26 +312,104 @@ class _TranscationPageState extends State<TranscationPage> {
   }
 
   otherView() {
-    return CustomScrollView(slivers: <Widget>[
-      Consumer<TranscationModel>(
-        builder: (context, value, child) {
-          return value.list.isNotEmpty
-              ? SliverList(
-                  delegate: SliverChildBuilderDelegate((c, i) {
-                  return showRowCell(value.list.isEmpty ? null : value.list[i]);
-                }, childCount: value.list.length))
-              : SliverPadding(
-                  padding: EdgeInsets.only(top: 200.w),
-                  sliver: SliverToBoxAdapter(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: errorView,
-                    ),
-                  ),
-                );
-        },
+    return Consumer<TranscationModel>(
+      builder: (context, value, child) {
+        return value.list.isNotEmpty
+            ? _tableView(value.list)
+            : Container();
+      },
+    );
+  }
+  
+  _tableView(List<dynamic> list){
+    return ScalableDataTable(
+      header: DefaultTextStyle(
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[400],
+        ),
+        child: ScalableTableHeader(
+          columnWrapper: columnWrapper,
+          children: const [
+            Text('任务ID'),
+            Text('状态'),
+            Text('类型'),
+            Text('出款地址'),
+            Text('首款地址'),
+            Text('金额'),
+            Text('交易ID'),
+            Text('备注'),
+            Text('更新时间'),
+            Text('创建时间'),
+          ],
+        ),
       ),
-    ]);
+      rowBuilder: (context, index) {
+        final PayOutTask task = list[index] as PayOutTask;
+        return ScalableTableRow(
+          columnWrapper: columnWrapper,
+          color: MaterialStateColor.resolveWith((states) =>
+          (index % 2 == 0) ? Colors.grey[200]! : Colors.transparent),
+          children: [
+            Text('${task.taskId}'),
+            Text(task.status.name),
+            Text(task.walletType),
+            Text(task.fromAddr),
+            Text(task.toAddr),
+            Text('${task.amount}'),
+            Text(task.transactionId),
+            Text(task.remark),
+            Text('${task.updateTime}'),
+            Text('${task.createTime}'),
+          ],
+        );
+      },
+      emptyBuilder: (context) => const Text('No users yet...'),
+      itemCount: list.length,
+      minWidth: 1300, // max(MediaQuery.of(context).size.width, 1000),
+      textStyle: TextStyle(color: Colors.grey[700], fontSize: 12),
+    );
+  }
+
+  Widget columnWrapper(BuildContext context, int columnIndex, Widget child) {
+    const padding = EdgeInsets.symmetric(horizontal: 10);
+    switch (columnIndex) {
+      case 0:
+        return Container(
+          width: 70,
+          padding: padding,
+          child: child,
+        );
+      case 1:
+      case 2:
+        return Container(
+          width: 60,
+          padding: padding,
+          child: child,
+        );
+      case 3:
+      case 4:
+      case 6:
+        return Container(
+          width: 200,
+          padding: padding,
+          child: child,
+        );
+      case 5:
+        return Container(
+          width: 120,
+          padding: padding,
+          child: child,
+        );
+      default:
+        return Expanded(
+          child: Container(
+            padding: padding,
+            child: child,
+          ),
+        );
+    }
   }
 
   @override
