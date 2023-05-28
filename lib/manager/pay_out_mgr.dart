@@ -37,9 +37,26 @@ class PayOutMgr extends OnUpdateActor {
     int tm = nowUnixTimeSecond();
     for (var e in res) {
       PayOutTask task = PayOutTask.fromJson(e);
-      task.createTime = tm;
-      task.updateTime = tm;
-      dbMgr.insertByHelper(tbName, task.toJson());
+      final sql = "select * from $tbName where task_id = ${task.taskId}";
+      List<Map<String, dynamic>> list = await dbMgr.queryList(sql);
+      if (list.isEmpty) {
+        task.createTime = tm;
+        task.updateTime = tm;
+        await dbMgr.insertByHelper(tbName, task.toJson());
+      } else {
+        PayOutTask t = PayOutTask.fromJson(list[0]);
+        if (t.status == PayOutStatusEnum.payOutStatusFail) {
+          t.status = PayOutStatusEnum.payOutStatusNone;
+          task.updateTime = nowUnixTimeSecond();
+          await dbMgr.updateByHelper(
+              tbName, Map.from(t.toJson()), 'task_id = ?', [t.taskId]);
+        } else if (t.status == PayOutStatusEnum.payOutStatusSucceed) {
+          t.status = PayOutStatusEnum.payOutStatusCallback;
+          task.updateTime = nowUnixTimeSecond();
+          await dbMgr.updateByHelper(
+              tbName, Map.from(t.toJson()), 'task_id = ?', [t.taskId]);
+        }
+      }
     }
     await dbMgr.close();
   }
@@ -96,21 +113,32 @@ class PayOutMgr extends OnUpdateActor {
     assert(task.toAddr.trim() != '');
     double? trxBalance = await bcMgr.getBasicCurBalance();
     if (trxBalance == null) {
-      showToast('获取矿工费失败，重试。。');
+      showToast('${task.taskId}获取矿工费失败，重试。。');
       return;
     }
 
+    //预估矿工费
     final double? energyUsed =
         await bcMgr.estimateenergy(task.toAddr, task.amount);
     if (energyUsed == null) {
-      showToast('获取矿工费失败，重试。。');
+      showToast('${task.taskId}预估矿工费失败，重试。。');
       return;
     }
 
+    //判断矿工费
+    if (trxBalance < energyUsed) {
+      task.status = PayOutStatusEnum.payOutStatusFail;
+      task.remark = '矿工费不足';
+      await serviceRemote.updateCollectionTask(task);
+      await updateTask(task);
+      return;
+    }
+
+    //开始转账
     List? result =
         await bcMgr.transferUSDT(task.toAddr, task.amount, energyUsed);
     if (result == null) {
-      showToast('发生未知错误');
+      showToast('${task.taskId}发生未知错误');
       return;
     }
 
@@ -121,6 +149,7 @@ class PayOutMgr extends OnUpdateActor {
     } else {
       task.status = PayOutStatusEnum.payOutStatusFail;
       task.remark = result.last;
+      await serviceRemote.updateCollectionTask(task);
     }
     await updateTask(task);
   }
@@ -128,11 +157,15 @@ class PayOutMgr extends OnUpdateActor {
   Future<void> checkTran(BlockchainMgr bcMgr, PayOutTask task) async {
     bool? result = await bcMgr.gettransactionbyid(task.transactionId);
     if (result == null) {
-      showToast('发生未知错误');
+      showToast('${task.taskId}发生未知错误');
       return;
     }
-    if (result) {
-    } else {}
+    //这里返回类型不是bool，只好这样写了
+    if (result == true) {
+      task.status = PayOutStatusEnum.payOutStatusCallback;
+      task.updateTime = nowUnixTimeSecond();
+      await updateTask(task);
+    }
   }
 
   ///出款
@@ -195,21 +228,37 @@ class PayOutMgr extends OnUpdateActor {
     return result;
   }
 
+  Future<List<PayOutTask>> _getData(int start, int end) async {
+    await dbMgr.open();
+    final sql =
+        "select * from $tbName where update_time >= $start and update_time <= end";
+    List<Map<String, dynamic>> list = await dbMgr.queryList(sql);
+    List<PayOutTask> result = [];
+    for (var e in list) {
+      result.add(PayOutTask.fromJson(e));
+    }
+    await dbMgr.close();
+    return result;
+  }
+
   ///获取今日数据
   Future<List<PayOutTask>> getTodayData() async {
     _dataTm = getTime(DateTime.now());
-    return _randomData(10);
+    return _getData(_dataTm, _dataTm + 86400 - 1);
+    // return _randomData(10);
   }
 
   ///获取上一日数据
   Future<List<PayOutTask>> getPreviousDayData() async {
     _dataTm = _dataTm - 86400;
-    return _randomData(20);
+    return _getData(_dataTm, _dataTm + 86400 - 1);
+    // return _randomData(20);
   }
 
   ///获取下一日数据
   Future<List<PayOutTask>> getNextDayData() async {
     _dataTm = _dataTm + 86400;
-    return _randomData(20);
+    return _getData(_dataTm, _dataTm + 86400 - 1);
+    // return _randomData(20);
   }
 }
