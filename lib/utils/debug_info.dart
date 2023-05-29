@@ -6,10 +6,10 @@ import 'package:bobi_pay_out/utils/platform_utils.dart';
 const OUTPUT_LEN = 500;
 
 enum EnumSentry {
-  EnumSentryDef,
+  enumSentryDef,
 }
 
-DebugInfo debugInfo = new DebugInfo();
+DebugInfo debugInfo = DebugInfo();
 
 const int _max = 100;
 
@@ -23,10 +23,10 @@ pdebug(info, {int? len, bool writeSentry = true, String? prefix}) {
   if (len > 0 && msg.length > len) {
     msg = msg.substring(0, len);
   }
-  print('$msg');
+  print(msg);
 }
 
-extension objectExtension on Object {
+extension ObjectExtension on Object {
   @protected
   mypdebug(dynamic msg, {bool writeSentry = true, int len = OUTPUT_LEN}) {
     String outMsg = '[$runtimeType]$msg';
@@ -128,7 +128,7 @@ $s
   void printErrorStack(e, s,
       {String titleInfo = '',
       bool save = true,
-      EnumSentry es = EnumSentry.EnumSentryDef}) {
+      EnumSentry es = EnumSentry.enumSentryDef}) {
     if (_exclude(e)) return;
     mypdebug(titleInfo);
     String msg = '$titleInfo\n${_formatE(e)}\n${_formatS(s)}';

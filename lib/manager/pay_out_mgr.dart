@@ -18,6 +18,13 @@ final PayOutMgr payOutMgr = PayOutMgr();
 
 class PayOutMgr extends OnUpdateActor {
   final tbName = 'tb_pay_out';
+  PayOutMgr() {
+    timerMgr.add(this, ms: 1000);
+  }
+
+  dispose() {
+    timerMgr.del(this);
+  }
 
   ///心跳
   @override

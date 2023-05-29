@@ -7,7 +7,7 @@ import 'package:synchronized/synchronized.dart' as synchronized;
 import 'package:bobi_pay_out/utils/debug_info.dart';
 import 'package:bobi_pay_out/utils/utility.dart';
 
-final TimerMgr timer_mgr = TimerMgr();
+final TimerMgr timerMgr = TimerMgr();
 
 /// 支持心跳接口
 abstract class OnUpdateActor {
@@ -63,9 +63,6 @@ class TickHolder {
     _i = 0;
   }
 }
-
-/// 自定义心跳管理器
-final TimerMgr timerMgr = TimerMgr();
 
 /// 每帧变化的时间
 const _UpdateMs = 100;
