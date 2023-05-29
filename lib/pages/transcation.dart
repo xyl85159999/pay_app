@@ -37,7 +37,7 @@ class _TranscationPageState extends State<TranscationPage> {
         Provider.of<TranscationModel>(context, listen: false);
     _transcationLogModel.startDate = DateTime.now();
     _transcationLogModel.endDate = DateTime.now();
-    _transcationLogModel.loadData();
+    // _transcationLogModel.loadData();
   }
 
   onSelectedList(BuildContext context, String str) {

@@ -231,7 +231,7 @@ class PayOutMgr extends OnUpdateActor {
   Future<List<PayOutTask>> _getData(int start, int end) async {
     await dbMgr.open();
     final sql =
-        "select * from $tbName where update_time >= $start and update_time <= end";
+        "select * from $tbName where update_time >= $start and update_time <= $end";
     List<Map<String, dynamic>> list = await dbMgr.queryList(sql);
     List<PayOutTask> result = [];
     for (var e in list) {
