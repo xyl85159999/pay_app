@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:bobi_pay_out/manager/connectivity_mgr.dart';
@@ -141,8 +142,8 @@ class _AppSceneState extends State<AppScene> with WidgetsBindingObserver {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       splitScreenMode: false,
-      builder: (context, w) => GetMaterialApp(
-        home: view2,
+      builder: (context, w) => OKToast(
+        child: view2,
       ),
     );
   }

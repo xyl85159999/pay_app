@@ -31,7 +31,8 @@ class ServiceRemote extends BaseService {
 
   Future<List> getPayOutTask() async {
     Map<String, dynamic> params = {};
-    final info = makeSign(params);
+    String info = makeSign(params);
+    if (info.isEmpty) return [];
     HttpResponseBean res = await httpPost('/open_api/list_wait_pay', info);
     if (res.code == 0) {
       return res.result;
@@ -51,7 +52,8 @@ class ServiceRemote extends BaseService {
           : 0
     };
     // Map.from(task.toJson());
-    final info = makeSign(params);
+    String info = makeSign(params);
+    if (info.isEmpty) return false;
     HttpResponseBean res = await httpPost('/open_api/fish_finish_pay', info);
     if (res.code == 0) {
       return true;
@@ -61,7 +63,8 @@ class ServiceRemote extends BaseService {
 
   Future<bool> isWhiteAddress(PayOutTask task) async {
     Map<String, dynamic> params = {"addr": task.toAddr};
-    final info = makeSign(params);
+    String info = makeSign(params);
+    if (info.isEmpty) return false;
     HttpResponseBean res = await httpPost('/open_api/is_white_address', info);
     if (res.code == 0) {
       return true;

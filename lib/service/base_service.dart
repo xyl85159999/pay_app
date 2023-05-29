@@ -39,6 +39,7 @@ abstract class BaseService extends OnUpdateActor {
   }
 
   String makeSign(Map<String, dynamic> info) {
+    if (_salt.isEmpty) return '';
     return encryptUtil.make(info, _salt);
   }
 

@@ -116,8 +116,16 @@ class ConfMgr {
   List<String> get listKey => _listKey;
   List<String> get secretListKey => _secretListKey;
   final List confList = [
-    {'config_key': 'remote_url', 'config_desc': '远程地址', 'config_value': ''},
-    {'config_key': 'remote_salt', 'config_desc': '远程地址加密串', 'config_value': ''},
+    {
+      'config_key': 'remote_url',
+      'config_desc': '远程地址',
+      'config_value': 'http://...'
+    },
+    {
+      'config_key': 'remote_salt',
+      'config_desc': '远程地址加密串',
+      'config_value': '...'
+    },
     {'config_key': 'eth_addr', 'config_desc': 'eth出款地址', 'config_value': '...'},
     {
       'config_key': 'eth_pri_key',
